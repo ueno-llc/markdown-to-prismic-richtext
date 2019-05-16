@@ -1,0 +1,16 @@
+{
+  "name": "markdown-to-prismic-richtext",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.13",
+    "@types/marked": "^0.6.5",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "marked": "^0.6.2"
+  }
+}
