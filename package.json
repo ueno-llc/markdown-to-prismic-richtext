@@ -1,5 +1,5 @@
 {
-  "name": "markdown-to-prismic",
+  "name": "markdown-to-prismic-richtext",
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {

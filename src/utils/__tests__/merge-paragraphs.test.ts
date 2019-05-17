@@ -93,6 +93,6 @@ describe("merge paragraphs", () => {
   it("should add line breaks between paragraphs", () => {
     const result = mergeParagraphs(example.children as MarkdownNode[]);
     
-    expect(result.content.spans.length).toBe(2);
+    expect(result.spans.length).toBe(2);
   });
 });

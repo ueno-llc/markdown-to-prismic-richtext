@@ -1,7 +1,7 @@
 import { MarkdownNode, RichTextBlock } from "../types";
 import { repeat, flatten } from "lodash";
 import { extractText } from "./extract-text";
-import { reduceChildren } from "./reduce-children";
+import { transformChildren } from "./transform-children";
 
 function intersperse<T>(arr: T[], elementFn: (left: T, right: T) => T) {
   return arr.reduce((acc, current, i) => {
@@ -39,13 +39,12 @@ export function mergeParagraphs(paragraphs: MarkdownNode[]): RichTextBlock {
     type: "root"
   });
 
-  const children = reduceChildren(flatten(paragraphsWithLinebreaks.map(x => x.children)), offsets);
+  const children = transformChildren(flatten(paragraphsWithLinebreaks.map(x => x.children)), offsets);
 
   return {
     type: "paragraph",
-    content: {
-      spans: children,
-      text
-    }
+
+    spans: children,
+    text
   };
 }

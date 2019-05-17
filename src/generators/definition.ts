@@ -35,24 +35,23 @@ export function generate(node: MarkdownNode): RichTextBlock[] {
   // we fake it by adding a strong span, and a link span
   const definitionBlock: RichTextBlock = {
     type: "paragraph",
-    content: {
-      text,
-      spans: [
-        ...generateStrong({
-          type: "strong",
-          position,
-          children: [],
-          value: `${refNode.identifier}:`
-        }),
-        ...link({
-          type: "link",
-          title: refNode.label,
-          url: refNode.url,
-          value: refNode.url,
-          position
-        } as LinkMarkdownNode)
-      ]
-    }
+
+    text,
+    spans: [
+      ...generateStrong({
+        type: "strong",
+        position,
+        children: [],
+        value: `${refNode.identifier}:`
+      }),
+      ...link({
+        type: "link",
+        title: refNode.label,
+        url: refNode.url,
+        value: refNode.url,
+        position
+      } as LinkMarkdownNode)
+    ]
   };
 
   return [definitionBlock];

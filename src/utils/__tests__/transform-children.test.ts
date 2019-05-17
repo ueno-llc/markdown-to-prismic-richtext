@@ -1,9 +1,9 @@
 import { MarkdownNode, RichTextSpan } from "../../types";
 import { parseMarkdown } from "../parse-markdown";
 import { extractText } from "../extract-text";
-import { reduceChildren } from "../reduce-children";
+import { transformChildren } from "../transform-children";
 
-describe("reduce children", () => {
+describe("transform children", () => {
   it("should generate children with correct offsets", () => {
     const markdownAst = parseMarkdown(`he**l**lo
     this is a 
@@ -12,7 +12,7 @@ describe("reduce children", () => {
 
     const [_, offsets] = extractText(markdownAst);
 
-    const spanNodes = reduceChildren(markdownAst.children!, offsets);
+    const spanNodes = transformChildren(markdownAst.children!, offsets);
 
     expect(spanNodes.length).toBe(1);
     expect(spanNodes[0].type).toBe("strong");

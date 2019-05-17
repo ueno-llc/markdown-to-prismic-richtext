@@ -3,6 +3,7 @@ import { inspect } from "util";
 import { Parser } from "remark-parse";
 import { RichTextBlock, RichTextSpan } from "types";
 import { parseMarkdown } from "../utils/parse-markdown";
+import PrismicRichText from "prismic-richtext";
 
 const markdown = `
  * This is 
@@ -12,6 +13,18 @@ const markdown = `
     `;
 
 const markdown2 = `
+# Hello
+
+Let me tell you about this **project**. It should turn *markdown* into prismic richtext...
+
+..for the most part.
+
+## Chapter 2 
+
+Lorem ipsum
+dolor
+sit amet
+
  2. This
  3. Is
     with **many** lines
@@ -29,8 +42,8 @@ function expectBlock(
 ) {
   expect(blockNode).not.toBeNull();
   expect(blockNode.type).toBe(type);
-  expect(blockNode!.content.text).toBe(content);
-  expect(blockNode!.content.spans.length).toBe(spansCount);
+  expect(blockNode!.text).toBe(content);
+  expect(blockNode!.spans.length).toBe(spansCount);
 }
 
 function expectSpan(span: RichTextSpan, type: string, start: number, end: number, text?: string) {
@@ -46,7 +59,7 @@ function expectSpan(span: RichTextSpan, type: string, start: number, end: number
 
 describe("convert", () => {
   it.skip("should convert", () => {
-    const result = parseMarkdown(markdown2);
+    const result = convert(markdown2);
 
     console.log(inspect(result, undefined, 20));
   });
@@ -54,7 +67,7 @@ describe("convert", () => {
   it("should convert strong", () => {
     const [block] = convert("he**l**lo");
 
-    const strong = (block as RichTextBlock).content.spans[0] as RichTextSpan;
+    const strong = (block as RichTextBlock).spans[0] as RichTextSpan;
 
     expectSpan(strong, "strong", 2, 3, "l");
   });
@@ -62,7 +75,7 @@ describe("convert", () => {
   it("should convert em", () => {
     const [block] = convert("he*l*lo");
 
-    const em = (block as RichTextBlock).content.spans[0] as RichTextSpan;
+    const em = (block as RichTextBlock).spans[0] as RichTextSpan;
 
     expectSpan(em, "em", 2, 3, "l");
   });
@@ -84,7 +97,7 @@ describe("convert", () => {
     const pgblock = result[0] as RichTextBlock;
 
     expectBlock(pgblock, "paragraph", "this is hello a link", 1);
-    expectSpan(pgblock.content.spans[0] as RichTextSpan, "hyperlink", 8, 13);
+    expectSpan(pgblock.spans[0] as RichTextSpan, "hyperlink", 8, 13);
   });
 
   it("should convert bare links", () => {
@@ -93,7 +106,7 @@ describe("convert", () => {
     const pgblock = result[0] as RichTextBlock;
 
     expectBlock(pgblock, "paragraph", "http://mbl.is", 1);
-    expectSpan(pgblock.content.spans[0] as RichTextSpan, "hyperlink", 0, 13);
+    expectSpan(pgblock.spans[0] as RichTextSpan, "hyperlink", 0, 13);
   });
 
   it("should convert headings", () => {
@@ -140,5 +153,9 @@ describe("convert", () => {
 });
 
 describe("prismic compatibility", () => {
-  it("should convert into something prismic can use", () => {});
+  it("should convert into something prismic can use", () => {
+    const bla = convert(markdown2);
+
+    PrismicRichText.asTree(bla);
+  });
 });

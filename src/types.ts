@@ -15,10 +15,8 @@ export interface RichTextSpan {
 
 export interface RichTextBlock {
   type: string;
-  content: {
-    spans: RichTextSpan[];
-    text: string;
-  };
+  spans: RichTextSpan[];
+  text: string;
 }
 
 export interface Position {
