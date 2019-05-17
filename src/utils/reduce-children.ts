@@ -6,14 +6,11 @@ import { GeneratorFn, runGenerator, spans } from "../generators/generators";
 
 /**
  * Turn span-level nodes into their prismic variants, with corrected offsets.
- * 
+ *
  * @param children the span nodes belonging to a block, e.g. a paragraph or a list
  * @param offsets The actual character offsets of each span
  */
-export function reduceChildren(
-  children: MarkdownNode[],
-  offsets: Offset[]
-): RichTextSpan[] {
+export function reduceChildren(children: MarkdownNode[], offsets: Offset[]): RichTextSpan[] {
   return children
     .reduce((acc, child) => {
       const spanNodes = runGenerator(child, spans);

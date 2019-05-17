@@ -41,5 +41,5 @@ export interface MarkdownNode {
   type: string;
   value?: string;
   children?: MarkdownNode[];
-  position: Position;
+  position?: Position;
 }
