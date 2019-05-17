@@ -1,4 +1,2 @@
-
-
-declare module "remark-parse";
-declare module "prismic-richtext";
+declare module 'remark-parse';
+declare module 'prismic-richtext';

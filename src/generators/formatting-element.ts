@@ -1,20 +1,19 @@
-import { RichTextSpan } from "prismic-richtext/src/richtext";
-import { extractText } from "../utils/extract-text";
-import { MarkdownNode } from "../types";
-import { first, last } from "lodash"
+import { first, last } from 'lodash';
+import { extractText } from '../utils/extract-text';
+import { IMarkdownNode, IRichTextSpan } from '../types';
 
-export const element = (type: string) => (node: MarkdownNode): RichTextSpan[] => {
+export const element = (type: string) => (node: IMarkdownNode): IRichTextSpan[] => {
   const [text, offsets] = extractText(node);
 
-  const [start, _] = first(offsets);
-  const [__, end] = last(offsets);
- 
+  const [start, _] = first(offsets)!;
+  const [__, end] = last(offsets)!;
+
   return [
     {
-      type,
-      text,
+      end,
       start,
-      end
-    }
+      text,
+      type,
+    },
   ];
 };

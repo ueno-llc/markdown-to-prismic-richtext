@@ -1,43 +1,37 @@
-export type PrismicNode = RichTextBlock | RichTextSpan | null;
+export type PrismicNode = IRichTextBlock | IRichTextSpan | null;
 
-export interface Pos {
+export interface IPos {
   line: number;
   column: number;
   offset: number;
 }
 
-export interface RichTextSpan {
+export interface IRichTextSpan {
   start: number;
   end: number;
   type: string;
   text?: string;
 }
 
-export interface RichTextBlock {
+export interface IRichTextBlock {
   type: string;
-  spans: RichTextSpan[];
+  spans: IRichTextSpan[];
   text: string;
 }
 
-export interface Position {
-  start: Pos;
-  end: Pos;
+export interface IPosition {
+  start: IPos;
+  end: IPos;
 }
 
-export interface MarkdownHeadingNode extends MarkdownNode {
-  type: "heading";
+export interface IMarkdownHeadingNode extends IMarkdownNode {
+  type: 'heading';
   depth: number;
 }
 
-export interface PrismicRootNode {
-  rich: PrismicNode[];
-  rich_TYPE: "StructuredText";
-  rich_POSITION: number;
-}
-
-export interface MarkdownNode {
+export interface IMarkdownNode {
   type: string;
   value?: string;
-  children?: MarkdownNode[];
-  position?: Position;
+  children?: IMarkdownNode[];
+  position?: IPosition;
 }

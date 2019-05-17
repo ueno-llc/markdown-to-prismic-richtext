@@ -1,19 +1,19 @@
-import { MarkdownNode } from "../types";
+import { IMarkdownNode } from '../types';
 
 export type Offset = [number, number];
 
-export function extractText(node: MarkdownNode): [string, Offset[]] {
-  let accumulator = "";
+export function extractText(node: IMarkdownNode): [string, Offset[]] {
+  let accumulator = '';
 
-  let queue: MarkdownNode[] = [node];
+  let queue: IMarkdownNode[] = [node];
 
-  const offsets : Offset[] = [];
+  const offsets: Offset[] = [];
 
   while (queue.length) {
     const curr = queue.shift()!;
 
     if (curr.value) {
-      offsets.push([accumulator.length, accumulator.length + curr.value.length])
+      offsets.push([accumulator.length, accumulator.length + curr.value.length]);
       accumulator += curr.value;
     }
 
@@ -21,8 +21,6 @@ export function extractText(node: MarkdownNode): [string, Offset[]] {
       queue = [...curr.children, ...queue];
     }
   }
-
-  
 
   return [accumulator, offsets];
 }

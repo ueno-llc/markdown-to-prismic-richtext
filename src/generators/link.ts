@@ -1,42 +1,41 @@
-import { MarkdownNode, RichTextSpan } from "../types";
-import { extractText } from "../utils/extract-text";
-import { first, last } from "lodash"
+import { IMarkdownNode, IRichTextSpan } from '../types';
+import { extractText } from '../utils/extract-text';
+import { first, last } from 'lodash';
 
-interface HyperlinkRichTextSpan extends RichTextSpan {
-  type: "hyperlink",
+interface IHyperlinkRichTextSpan extends IRichTextSpan {
+  type: 'hyperlink';
   data: {
     url: string;
     preview: {
       title?: string;
-    }
-  }
+    };
+  };
 }
 
-export interface LinkMarkdownNode extends MarkdownNode {
+export interface ILinkMarkdownNode extends IMarkdownNode {
   url: string;
-  title: string | null; 
+  title: string | null;
 }
 
-export function generate(node: MarkdownNode): RichTextSpan[] {
-  
-  const linkNode = node as LinkMarkdownNode;
+export function generate(node: IMarkdownNode): IRichTextSpan[] {
+  const linkNode = node as ILinkMarkdownNode;
 
-  const [text, offsets] = extractText(linkNode); 
+  const [, offsets] = extractText(linkNode);
 
-  const [start, _] = first(offsets);
-  const [__, end] = last(offsets); 
+  const [start] = first(offsets)!;
+  const [, end] = last(offsets)!;
 
-  const hyperlink : HyperlinkRichTextSpan = {
-    type: "hyperlink",
+  const hyperlink: IHyperlinkRichTextSpan = {
+    type: 'hyperlink',
     start,
-    end, 
+    end,
     data: {
       url: linkNode.url,
       preview: {
-        title: linkNode.title ? linkNode.title : ''
-      }
-    }
-  }
+        title: linkNode.title ? linkNode.title : '',
+      },
+    },
+  };
 
-  return [hyperlink]
+  return [hyperlink];
 }

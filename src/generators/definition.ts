@@ -1,57 +1,55 @@
-import { MarkdownNode, RichTextSpan, RichTextBlock, Position } from "../types";
-import { extractText } from "../utils/extract-text";
-import { element } from "./formatting-element";
-import { generate as link, LinkMarkdownNode } from "./link";
+import { IMarkdownNode, IRichTextBlock } from '../types';
+import { element } from './formatting-element';
+import { generate as link, ILinkMarkdownNode } from './link';
 
-interface DefinitionNode extends MarkdownNode {
-  type: "definition";
+interface IDefinitionNode extends IMarkdownNode {
   identifier: string;
   label: string;
-  url: string;
   referenceType: string;
+  type: 'definition';
+  url: string;
 }
 
 const position = {
-  start: {
-    offset: 0,
-    column: 0,
-    line: 0
-  },
   end: {
-    offset: 0,
     column: 0,
-    line: 0
-  }
+    line: 0,
+    offset: 0,
+  },
+  start: {
+    column: 0,
+    line: 0,
+    offset: 0,
+  },
 };
 
-export function generate(node: MarkdownNode): RichTextBlock[] {
-  const refNode = node as DefinitionNode;
+export function generate(node: IMarkdownNode): IRichTextBlock[] {
+  const refNode = node as IDefinitionNode;
 
-  const generateStrong = element("strong");
+  const generateStrong = element('strong');
 
   const text = `${refNode.identifier}: ${refNode.url}`;
 
   // Prismic RichText has no support for in-document references, so
   // we fake it by adding a strong span, and a link span
-  const definitionBlock: RichTextBlock = {
-    type: "paragraph",
-
-    text,
+  const definitionBlock: IRichTextBlock = {
     spans: [
       ...generateStrong({
-        type: "strong",
-        position,
         children: [],
-        value: `${refNode.identifier}:`
+        position,
+        type: 'strong',
+        value: `${refNode.identifier}:`,
       }),
       ...link({
-        type: "link",
+        position,
         title: refNode.label,
+        type: 'link',
         url: refNode.url,
         value: refNode.url,
-        position
-      } as LinkMarkdownNode)
-    ]
+      } as ILinkMarkdownNode),
+    ],
+    text,
+    type: 'paragraph',
   };
 
   return [definitionBlock];

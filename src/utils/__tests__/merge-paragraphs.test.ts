@@ -1,98 +1,98 @@
-import { mergeParagraphs } from "../merge-paragraphs";
-import { MarkdownNode } from "../../types";
+import { mergeParagraphs } from '../merge-paragraphs';
+import { IMarkdownNode } from '../../types';
 
 const example = {
-  type: "listItem",
+  type: 'listItem',
   spread: true,
 
   children: [
     {
-      type: "paragraph",
+      type: 'paragraph',
       children: [
         {
-          type: "text",
-          value: "Is\nwith ",
+          type: 'text',
+          value: 'Is\nwith ',
           position: {
             start: { line: 3, column: 5, offset: 14 },
-            end: { line: 4, column: 10, offset: 26 }
-          }
+            end: { line: 4, column: 10, offset: 26 },
+          },
         },
         {
-          type: "strong",
+          type: 'strong',
           children: [
             {
-              type: "text",
-              value: "many",
+              type: 'text',
+              value: 'many',
               position: {
                 start: { line: 4, column: 12, offset: 28 },
-                end: { line: 4, column: 16, offset: 32 }
-              }
-            }
+                end: { line: 4, column: 16, offset: 32 },
+              },
+            },
           ],
           position: {
             start: { line: 4, column: 10, offset: 26 },
-            end: { line: 4, column: 18, offset: 34 }
-          }
+            end: { line: 4, column: 18, offset: 34 },
+          },
         },
         {
-          type: "text",
-          value: " lines",
+          type: 'text',
+          value: ' lines',
           position: {
             start: { line: 4, column: 18, offset: 34 },
-            end: { line: 4, column: 24, offset: 40 }
-          }
-        }
+            end: { line: 4, column: 24, offset: 40 },
+          },
+        },
       ],
       position: {
         start: { line: 3, column: 5, offset: 14 },
-        end: { line: 4, column: 24, offset: 40 }
-      }
+        end: { line: 4, column: 24, offset: 40 },
+      },
     },
     {
-      type: "paragraph",
+      type: 'paragraph',
       children: [
         {
-          type: "emphasis",
+          type: 'emphasis',
           children: [
             {
-              type: "text",
-              value: "more",
+              type: 'text',
+              value: 'more',
               position: {
                 start: { line: 6, column: 6, offset: 51 },
-                end: { line: 6, column: 10, offset: 55 }
-              }
-            }
+                end: { line: 6, column: 10, offset: 55 },
+              },
+            },
           ],
           position: {
             start: { line: 6, column: 5, offset: 50 },
-            end: { line: 6, column: 11, offset: 56 }
-          }
+            end: { line: 6, column: 11, offset: 56 },
+          },
         },
         {
-          type: "text",
-          value: " lines",
+          type: 'text',
+          value: ' lines',
           position: {
             start: { line: 6, column: 11, offset: 56 },
-            end: { line: 6, column: 17, offset: 62 }
-          }
-        }
+            end: { line: 6, column: 17, offset: 62 },
+          },
+        },
       ],
       position: {
         start: { line: 6, column: 5, offset: 50 },
-        end: { line: 6, column: 17, offset: 62 }
-      }
-    }
+        end: { line: 6, column: 17, offset: 62 },
+      },
+    },
   ],
   position: {
     start: { line: 3, column: 1, offset: 10 },
-    end: { line: 6, column: 17, offset: 62 }
-  }
+    end: { line: 6, column: 17, offset: 62 },
+  },
 };
 
-describe("merge paragraphs", () => {
-  it("should add line breaks between paragraphs", () => {
-    const result = mergeParagraphs(example.children as MarkdownNode[]);
-    
+describe('merge paragraphs', () => {
+  it('should add line breaks between paragraphs', () => {
+    const result = mergeParagraphs(example.children as IMarkdownNode[]);
+
     expect(result.spans.length).toBe(2);
   });
 });
