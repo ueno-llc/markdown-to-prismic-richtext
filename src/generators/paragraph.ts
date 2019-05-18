@@ -10,7 +10,6 @@ export function generate(node: IMarkdownNode): IRichTextBlock[] {
   return [
     {
       type: 'paragraph',
-
       text,
       spans: children,
     },

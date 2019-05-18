@@ -1,6 +1,6 @@
 {
   "name": "markdown-to-prismic-richtext",
-  "version": "1.0.0",
+  "version": "0.5.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -9,6 +9,7 @@
     "lint": "tslint -p tsconfig.json",
     "build": "yarn format && yarn lint && tsc"
   },
+  "contributors": ["Davíð Arnarsson"],
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.0.13",

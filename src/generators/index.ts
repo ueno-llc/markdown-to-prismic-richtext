@@ -1,6 +1,14 @@
 import { IMarkdownNode } from '../types';
-import { runGenerator, blocks, spans } from './generators';
-import { flatten } from 'lodash';
+import { runGenerator, blocks } from './generators';
+import { flatMap } from 'lodash';
+import { reset } from './hooks/context';
 
-export const generateRichText = (rootNode: IMarkdownNode) =>
-  flatten((rootNode.children || []).map(c => runGenerator(c, blocks)));
+export const generateRichText = (rootNode: IMarkdownNode) => {
+  return flatMap(rootNode.children || [], c => {
+    const context = reset();
+
+    const result = runGenerator(c, blocks);
+
+    return [...context.hoisted, ...result];
+  });
+};

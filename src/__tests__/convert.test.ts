@@ -1,6 +1,6 @@
 import { convert } from '../index';
-import PrismicRichText from 'prismic-richtext';
-import { IRichTextBlock, IRichTextSpan } from 'types';
+import * as PrismicRichText from 'prismic-richtext';
+import { IRichTextBlock, IRichTextSpan } from '../types';
 
 const markdown2 = `
 # Hello
@@ -42,25 +42,32 @@ function expectSpan(span: IRichTextSpan, type: string, start: number, end: numbe
   }
 }
 
+function expectPrismic(blocks: IRichTextBlock[]) {
+  PrismicRichText.asTree(blocks);
+}
+
 describe('convert', () => {
   it.skip('should convert', () => {
-    convert(markdown2);
+    const result = convert(markdown2);
+    expectPrismic(result);
   });
 
   it('should convert strong', () => {
-    const [block] = convert('he**l**lo');
+    const result = convert('he**l**lo');
 
-    const strong = (block as IRichTextBlock).spans[0] as IRichTextSpan;
+    const strong = result[0].spans[0];
 
     expectSpan(strong, 'strong', 2, 3, 'l');
+    expectPrismic(result);
   });
 
   it('should convert em', () => {
-    const [block] = convert('he*l*lo');
+    const result = convert('he*l*lo');
 
-    const em = (block as IRichTextBlock).spans[0] as IRichTextSpan;
+    const em = result[0].spans[0];
 
     expectSpan(em, 'em', 2, 3, 'l');
+    expectPrismic(result);
   });
 
   it('should convert link references', () => {
@@ -68,44 +75,53 @@ describe('convert', () => {
     
 [reference]: http://definition.com`);
 
-    const block = result[0] as IRichTextBlock;
-    const definitionBlock = result[1] as IRichTextBlock;
+    const block = result[0];
+    const definitionBlock = result[1];
     expectBlock(block, 'paragraph', 'here is a reference.', 1);
     expectBlock(definitionBlock, 'paragraph', 'reference: http://definition.com', 2);
+    expectPrismic(result);
   });
 
   it('should convert links with titles', () => {
     const result = convert('this is [hello](http://mbl.is "Mbl.is") a link');
 
-    const pgblock = result[0] as IRichTextBlock;
+    const pgblock = result[0];
 
     expectBlock(pgblock, 'paragraph', 'this is hello a link', 1);
-    expectSpan(pgblock.spans[0] as IRichTextSpan, 'hyperlink', 8, 13);
+    expectSpan(pgblock.spans[0], 'hyperlink', 8, 13);
+    expectPrismic(result);
   });
 
   it('should convert bare links', () => {
     const result = convert(`http://mbl.is`);
 
-    const pgblock = result[0] as IRichTextBlock;
+    const pgblock = result[0];
 
     expectBlock(pgblock, 'paragraph', 'http://mbl.is', 1);
-    expectSpan(pgblock.spans[0] as IRichTextSpan, 'hyperlink', 0, 13);
+    expectSpan(pgblock.spans[0], 'hyperlink', 0, 13);
+    expectPrismic(result);
   });
 
   it('should convert headings', () => {
     const result = convert(`# Hello`);
 
-    const block = result[0] as IRichTextBlock;
-
-    expectBlock(block, 'heading1', 'Hello');
+    expectBlock(result[0], 'heading1', 'Hello');
+    expectPrismic(result);
   });
 
   it('should convert paragraphs', () => {
     const content = `this is a paragraph`;
     const result = convert(content);
-    const blockNode = result[0] as IRichTextBlock;
+    expectBlock(result[0], 'paragraph', content);
+    expectPrismic(result)
+  });
 
-    expectBlock(blockNode, 'paragraph', content);
+  it('should convert images', () => {
+    const result = convert(
+      `![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")`,
+    );
+
+    console.log(result);
   });
 
   it('should convert ordered lists', () => {
@@ -119,6 +135,7 @@ describe('convert', () => {
 
     expectBlock(result[1], 'o-list-item', 'heckin list', 1);
     expect(result.length).toBe(4);
+    expectPrismic(result);
   });
 
   it('should convert unordered lists', () => {
@@ -127,11 +144,12 @@ describe('convert', () => {
  * **heckin** list
  * is 
  * totally
-    ordered
+   unordered
     `);
 
     expectBlock(result[1], 'list-item', 'heckin list', 1);
     expect(result.length).toBe(4);
+    expectPrismic(result);
   });
 });
 

@@ -1,4 +1,4 @@
-import { IMarkdownNode, IRichTextBlock } from '../types';
+import { IMarkdownNode, IRichTextBlock, IPosition } from '../types';
 import { repeat, flatten } from 'lodash';
 import { extractText } from './extract-text';
 import { transformChildren } from './transform-children';
@@ -15,22 +15,18 @@ export function mergeParagraphs(paragraphs: IMarkdownNode[]): IRichTextBlock {
   const paragraphsWithLinebreaks = intersperse(paragraphs, (left, right) => {
     const linebreaks = right.position!.start.line - left.position!.end.line;
 
+    const position = makePosition(left.position!.end.line, right.position!.end.line);
+
     return {
       type: 'paragraph',
       children: [
         {
           type: 'text',
           value: repeat('\n', linebreaks),
-          position: {
-            start: { line: left.position!.end.line, offset: 0, column: 0 },
-            end: { line: right.position!.end.line, offset: 0, column: 0 },
-          },
+          position,
         },
       ],
-      position: {
-        start: { line: left.position!.end.line, offset: 0, column: 0 },
-        end: { line: right.position!.end.line, offset: 0, column: 0 },
-      },
+      position,
     };
   });
 
@@ -39,12 +35,21 @@ export function mergeParagraphs(paragraphs: IMarkdownNode[]): IRichTextBlock {
     type: 'root',
   });
 
-  const children = transformChildren(flatten(paragraphsWithLinebreaks.map(x => x.children || [])), offsets);
+  const allChildren = flatten(paragraphsWithLinebreaks.map(x => x.children || []));
+
+  const transformed = transformChildren(allChildren, offsets);
 
   return {
     type: 'paragraph',
 
-    spans: children,
+    spans: transformed,
     text,
+  };
+}
+
+function makePosition(top: number, bottom: number): IPosition {
+  return {
+    start: { line: top, offset: 0, column: 0 },
+    end: { line: bottom, offset: 0, column: 0 },
   };
 }
