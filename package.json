@@ -1,6 +1,6 @@
 {
   "name": "@ueno/markdown-to-prismic-richtext",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "keywords": [
@@ -37,6 +37,6 @@
     "remark-parse": "^6.0.3"
   },
   "files": [
-    "lib/!(__tests__)/**/*"
+    "lib/**/*"
   ]
 }
