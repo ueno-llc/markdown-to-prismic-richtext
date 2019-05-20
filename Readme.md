@@ -1,6 +1,6 @@
 # Markdown to Prismic RichText
 
-For when you're importing a bunch of markdown into a prismic richtext field.
+For when you're importing a bunch of markdown into a prismic richtext field. Based on the import docs from [Prismic.io](https://user-guides.prismic.io/import/import-full-import-reference).
 
 ## Usage
 
@@ -17,10 +17,9 @@ RichText.asHtml(richText);
 
 ## Development 
 
-Write a failing test and get to it! :)
-
 ```bash 
 
 yarn test --watch
 
 ```
+

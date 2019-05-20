@@ -11,7 +11,7 @@ import { GeneratorFn, runGenerator, spans } from '../generators/generators';
 export function transformChildren(children: IMarkdownNode[], offsets: Offset[]): IRichTextSpan[] {
   return children
     .reduce<IRichTextSpan[]>((acc, child) => {
-      const spanNodes = runGenerator(child, spans);
+      const spanNodes = runGenerator(child, spans, spans.text);
 
       spanNodes.forEach(span => ([span.start, span.end] = offsets.shift()!));
 

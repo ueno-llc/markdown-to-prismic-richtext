@@ -1,17 +1,15 @@
-import { IRichTextBlock } from "types";
-
+import { IRichTextBlock } from 'types';
 
 interface IContext {
-  hoisted: IRichTextBlock[]
+  hoisted: IRichTextBlock[];
 }
 
-export let context = reset(); 
+export let context = reset();
 
-export function reset() : IContext {
+export function reset(): IContext {
   context = {
-    hoisted: []
-  }
+    hoisted: [],
+  };
 
   return context;
 }
-

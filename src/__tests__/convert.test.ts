@@ -1,6 +1,8 @@
-import { convert } from '../index';
+import convert from '../index';
 import * as PrismicRichText from 'prismic-richtext';
 import { IRichTextBlock, IRichTextSpan } from '../types';
+import { inspect } from 'util';
+import { parseMarkdown } from '../utils/parse-markdown';
 
 const markdown2 = `
 # Hello
@@ -113,15 +115,13 @@ describe('convert', () => {
     const content = `this is a paragraph`;
     const result = convert(content);
     expectBlock(result[0], 'paragraph', content);
-    expectPrismic(result)
+    expectPrismic(result);
   });
 
   it('should convert images', () => {
     const result = convert(
       `![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")`,
     );
-
-    console.log(result);
   });
 
   it('should convert ordered lists', () => {
@@ -150,6 +150,35 @@ describe('convert', () => {
     expectBlock(result[1], 'list-item', 'heckin list', 1);
     expect(result.length).toBe(4);
     expectPrismic(result);
+  });
+
+  it('should convert preformatted text', () => {
+    const content = `"
+
+    function main() {
+      log("whoo");
+    }
+
+\`\`\`
+this is a 
+preformatted
+block
+\`\`\`
+
+this is \`an inline code\` example
+    `;
+
+    const result = convert(content);
+
+    expectPrismic(result);
+  });
+
+  it('should remove HTML tags from slices', () => {
+    const content = `this is <br> some text <br />`;
+
+    const result = convert(content);
+
+    expect(result[0]!.text).toBe('this is  some text ');
   });
 });
 

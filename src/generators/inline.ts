@@ -2,7 +2,7 @@ import { first, last } from 'lodash';
 import { extractText } from '../utils/extract-text';
 import { IMarkdownNode, IRichTextSpan } from '../types';
 
-export const element = (type: string) => (node: IMarkdownNode): IRichTextSpan[] => {
+export const inline = (type: string) => (node: IMarkdownNode): IRichTextSpan[] => {
   const [text, offsets] = extractText(node);
 
   const [start, _] = first(offsets)!;

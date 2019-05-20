@@ -1,5 +1,5 @@
 import { IMarkdownNode, IRichTextBlock } from '../types';
-import { element } from './formatting-element';
+import { inline } from './inline';
 import { generate as link, ILinkMarkdownNode } from './link';
 
 interface IDefinitionNode extends IMarkdownNode {
@@ -26,7 +26,7 @@ const position = {
 export function generate(node: IMarkdownNode): IRichTextBlock[] {
   const refNode = node as IDefinitionNode;
 
-  const generateStrong = element('strong');
+  const generateStrong = inline('strong');
 
   const text = `${refNode.identifier}: ${refNode.url}`;
 

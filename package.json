@@ -1,15 +1,19 @@
 {
   "name": "markdown-to-prismic-richtext",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "main": "lib/index.js",
+  "keywords": [
+    "prismic",
+    "markdown"
+  ],
   "types": "lib/index.d.ts",
+  "author": "Ueno <hi@ueno.co> (https://ueno.co)",
   "scripts": {
     "test": "jest",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "build": "yarn format && yarn lint && tsc"
   },
-  "contributors": ["Davíð Arnarsson"],
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.0.13",
@@ -27,5 +31,7 @@
     "prismic-richtext": "^1.0.1",
     "remark-parse": "^6.0.3"
   },
-  "files": ["lib/!(__tests__)/**/*"]
+  "files": [
+    "lib/!(__tests__)/**/*"
+  ]
 }

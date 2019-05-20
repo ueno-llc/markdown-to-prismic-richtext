@@ -7,7 +7,7 @@ export const generateRichText = (rootNode: IMarkdownNode) => {
   return flatMap(rootNode.children || [], c => {
     const context = reset();
 
-    const result = runGenerator(c, blocks);
+    const result = runGenerator(c, blocks, blocks.paragraph);
 
     return [...context.hoisted, ...result];
   });

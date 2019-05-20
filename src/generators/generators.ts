@@ -6,7 +6,9 @@ import { generate as link } from './link';
 import { generate as image } from './image';
 import { generate as definition } from './definition';
 import { generate as list } from './list';
-import { element } from './formatting-element';
+import { generate as noop } from './noop';
+import { block } from './block';
+import { inline } from './inline';
 
 export type GeneratorFn<T extends PrismicNode> = (node: IMarkdownNode) => T[];
 
@@ -18,27 +20,36 @@ export const blocks: IGeneratorCollection<IRichTextBlock> = {
   heading,
   paragraph,
   definition,
-  
+
+  code: block('preformatted'),
   list,
+  html: noop,
+  thematicBreak: noop,
 };
 
 export const spans: IGeneratorCollection<IRichTextSpan> = {
   text,
   image,
-  strong: element('strong'),
-  emphasis: element('em'),
+  html: noop,
+  break: noop,
+  listItem: text,
+  inlineCode: inline('preformatted'),
+  strong: inline('strong'),
+  emphasis: inline('em'),
   link,
-  pre: element('preformatted'),
-  linkReference: element('strong'),
+  linkReference: inline('strong'),
 };
 
 export function runGenerator<T extends PrismicNode>(
   node: IMarkdownNode,
   generators: { [key: string]: GeneratorFn<T> },
+  defaultGenerator: GeneratorFn<T>,
 ): T[] {
   if (!generators[node.type]) {
-    throw new Error(`No generator of type "${node.type}" found!`);
+    /* tslint:disable-next-line */
+    console.warn(`No generator of type "${node.type}" found! Using text.`);
+    return text(node) as T[];
   }
-  
+
   return generators[node.type](node);
 }

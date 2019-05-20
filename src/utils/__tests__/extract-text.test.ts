@@ -30,6 +30,24 @@ describe('extract-text', () => {
     expect(text).toBe('hello world');
   });
 
+  it('should exclude nodes which are unsupported by prismic', () => {
+    const n = createBlockNode([
+      ...t('hello'),
+      {
+        type: 'html',
+        value: '<br />',
+        position: {
+          end: { column: 12, line: 1, offset: 12 },
+          start: { column: 6, line: 1, offset: 6 },
+        },
+      },
+    ]);
+
+    const [text, _, nodes] = extractText(n);
+    expect(text).toBe('hello');
+    expect(nodes.some(([type, _]) => type === 'html')).toBeFalsy();
+  });
+
   it('should extract text from a single value node', () => {
     const [textNode, [[start, end]]] = extractText(createTextNode('hello'));
     expect(textNode).toBe('hello');
