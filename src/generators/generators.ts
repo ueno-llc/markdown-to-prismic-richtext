@@ -47,8 +47,8 @@ export function runGenerator<T extends PrismicNode>(
 ): T[] {
   if (!generators[node.type]) {
     /* tslint:disable-next-line */
-    console.warn(`No generator of type "${node.type}" found! Using text.`);
-    return text(node) as T[];
+    console.warn(`No direct translation of type "${node.type}" to prismic richtext found! Using a default generator.`);
+    return defaultGenerator(node) as T[];
   }
 
   return generators[node.type](node);
