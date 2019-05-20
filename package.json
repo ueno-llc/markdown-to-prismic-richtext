@@ -1,18 +1,23 @@
 {
   "name": "@ueno/markdown-to-prismic-richtext",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "keywords": [
     "prismic",
     "markdown"
   ],
-  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ueno-llc/markdown-to-prismic-richtext.git"
+  },
+  "description": "Converts markdown to Prismic RichText-compatible objects",
   "author": "Ueno <hi@ueno.co> (https://ueno.co)",
   "scripts": {
     "test": "jest",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "build": "yarn format && yarn lint && tsc"
+    "prepare": "yarn format && yarn lint && tsc"
   },
   "license": "MIT",
   "devDependencies": {
