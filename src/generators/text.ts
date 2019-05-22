@@ -2,16 +2,17 @@ import { IMarkdownNode, IRichTextSpan } from '../types';
 import { GenerationResult } from './generators';
 
 export function generate(node: IMarkdownNode, offset: number): GenerationResult<IRichTextSpan> {
+  const text = node.value || '';
   return [
     [
       {
-        end: offset + node.value!.length,
+        end: offset + text.length,
         start: offset,
-        text: node.value,
+        text: text,
         type: 'text',
       },
     ],
-    node.value || '',
-    [offset, offset + node.value!.length],
+    text,
+    [offset, offset + text.length],
   ];
 }

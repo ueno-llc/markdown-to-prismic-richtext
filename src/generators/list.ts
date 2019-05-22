@@ -23,7 +23,7 @@ export function generate(node: IMarkdownNode, offset: number): GenerationResult<
         type,
       };
     }),
-    "",
+    '',
     [offset, offset],
   ];
 }

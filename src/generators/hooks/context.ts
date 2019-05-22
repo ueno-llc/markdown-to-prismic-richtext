@@ -10,7 +10,7 @@ export let context = reset();
 export function reset(): IContext {
   context = {
     hoisted: [],
-    parents: []
+    parents: [],
   };
 
   return context;

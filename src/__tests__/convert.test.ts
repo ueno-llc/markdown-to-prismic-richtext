@@ -214,14 +214,13 @@ this is \`an inline code\` example
 
     expectSpan(block.spans.find(x => x.type === 'strong')!, 'strong', 22, 26, 'text');
 
-    expectSpan(block.spans.find(x => x.type === 'hyperlink')!, 'hyperlink',12, 26, undefined);
+    expectSpan(block.spans.find(x => x.type === 'hyperlink')!, 'hyperlink', 12, 26, undefined);
   });
 
   it('should support image links', () => {
     const c = '[![Image title](https://placehold.it/128x128) should I add **more** text](https://mbl.is)';
 
     const result = convert(c);
-
   });
 });
 

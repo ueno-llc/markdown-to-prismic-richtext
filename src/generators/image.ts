@@ -32,7 +32,7 @@ export interface IImageNode extends IMarkdownNode {
 
 export function generate(node: IMarkdownNode, offset: number): GenerationResult<IRichTextSpan> {
   const imgNode = node as IImageNode;
-  
+
   const parent = useParent();
 
   const image: IImageBlock = {

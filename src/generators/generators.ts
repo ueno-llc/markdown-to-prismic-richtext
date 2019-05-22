@@ -18,7 +18,7 @@ export interface IGeneratorCollection<T extends PrismicNode> {
 
 export const blocks: IGeneratorCollection<IRichTextBlock> = {
   heading,
-  paragraph: block("paragraph"),
+  paragraph: block('paragraph'),
   definition: noop,
   code: block('preformatted'),
   list,
@@ -31,7 +31,7 @@ export const spans: IGeneratorCollection<IRichTextSpan> = {
   image,
   html: noop,
   break: noop,
-  listItem: inline("text"),
+  listItem: inline('text'),
   inlineCode: inline('preformatted'),
   strong: inline('strong'),
   emphasis: inline('em'),
@@ -43,7 +43,7 @@ export function runGenerator<T extends PrismicNode>(
   node: IMarkdownNode,
   generators: { [key: string]: GeneratorFn<T> },
   defaultGenerator: GeneratorFn<T>,
-  offset: number
+  offset: number,
 ): GenerationResult<T> {
   if (!generators[node.type]) {
     /* tslint:disable-next-line */

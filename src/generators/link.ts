@@ -21,7 +21,7 @@ export function generate(node: IMarkdownNode, offset: number): GenerationResult<
   const linkNode = node as ILinkMarkdownNode;
 
   const [children, text, [start, end]] = transformChildren(linkNode, offset);
-  
+
   const hyperlink: IHyperlinkRichTextSpan = {
     type: 'hyperlink',
     start,

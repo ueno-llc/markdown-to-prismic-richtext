@@ -3,7 +3,7 @@ import { runGenerator, blocks } from './generators';
 import { flatMap } from 'lodash';
 import { reset } from './hooks/context';
 
-export const generateRichText = (rootNode: IMarkdownNode) : IRichTextBlock[] => {
+export const generateRichText = (rootNode: IMarkdownNode): IRichTextBlock[] => {
   return flatMap(rootNode.children || [], c => {
     const context = reset();
 

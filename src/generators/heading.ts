@@ -7,11 +7,15 @@ export function generate(node: IMarkdownNode, offset: number): GenerationResult<
 
   const [spans, text, offsets] = transformChildren(node, offset);
 
-  return [[
-    { 
-      type: `heading${headingNode.depth}`,
-      text,
-      spans
-    },
-  ], text, offsets];
+  return [
+    [
+      {
+        type: `heading${headingNode.depth}`,
+        text,
+        spans,
+      },
+    ],
+    text,
+    offsets,
+  ];
 }
