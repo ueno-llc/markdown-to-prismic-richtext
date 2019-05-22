@@ -5,7 +5,7 @@ import { GenerationResult } from './generators';
 export function generate(node: IMarkdownNode, offset: number): GenerationResult<IRichTextBlock> {
   const headingNode = node as IMarkdownHeadingNode;
 
-  const [spans, text, offsets] = transformChildren(node.children || [], offset);
+  const [spans, text, offsets] = transformChildren(node, offset);
 
   return [[
     { 

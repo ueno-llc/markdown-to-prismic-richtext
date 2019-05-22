@@ -5,7 +5,7 @@ import { GenerationResult } from './generators';
 export const inline = (type: string) => (node: IMarkdownNode, offset: number): GenerationResult<IRichTextSpan> => {
   
 
-  const [spans, text, [start, end]] = transformChildren(node.children || [], offset);
+  const [spans, text, [start, end]] = transformChildren(node, offset);
 
   return [
     [

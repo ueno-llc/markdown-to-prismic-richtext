@@ -20,8 +20,8 @@ export interface ILinkMarkdownNode extends IMarkdownNode {
 export function generate(node: IMarkdownNode, offset: number): GenerationResult<IRichTextSpan> {
   const linkNode = node as ILinkMarkdownNode;
 
-  const [children, text, [start, end]] = transformChildren(linkNode.children || [], offset);
-
+  const [children, text, [start, end]] = transformChildren(linkNode, offset);
+  
   const hyperlink: IHyperlinkRichTextSpan = {
     type: 'hyperlink',
     start,

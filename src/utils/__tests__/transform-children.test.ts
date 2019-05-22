@@ -8,9 +8,8 @@ describe('transform children', () => {
     this is a 
     new 
     line`).children![0];
-
   
-    const [spanNodes] = transformChildren(markdownAst.children!, 0);
+    const [spanNodes] = transformChildren(markdownAst, 0);
     
     expect(spanNodes.length).toBe(2);
     expect(spanNodes[0].type).toBe('strong');

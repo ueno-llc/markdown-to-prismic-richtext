@@ -31,7 +31,7 @@ export function mergeParagraphs(paragraphs: IMarkdownNode[]): IRichTextBlock {
 
   const allChildren = flatten(paragraphsWithLinebreaks.map(x => x.children || []));
 
-  const [spans, text, ] = transformChildren(allChildren, 0);
+  const [spans, text, ] = transformChildren({ children: allChildren } as IMarkdownNode, 0);
 
   return {
     type: 'paragraph',

@@ -1,7 +1,9 @@
 import { IMarkdownNode, IRichTextBlock, IRichTextSpan } from 'types';
 import { hoist } from './hooks/hoist';
 import { GenerationResult } from './generators';
-import { generate as noop } from "./noop"
+import { generate as noop } from './noop';
+import { useParent } from './hooks/parent';
+import { ILinkMarkdownNode } from './link';
 
 export interface IImageBlock extends IRichTextBlock {
   type: 'image';
@@ -13,6 +15,12 @@ export interface IImageBlock extends IRichTextBlock {
       url: string;
     };
     url: string;
+    linkTo?: {
+      url: string;
+      preview: {
+        title: string;
+      };
+    };
   };
 }
 
@@ -25,9 +33,12 @@ export interface IImageNode extends IMarkdownNode {
 export function generate(node: IMarkdownNode, offset: number): GenerationResult<IRichTextSpan> {
   const imgNode = node as IImageNode;
   
-  hoist({
+  const parent = useParent();
+
+  const image: IImageBlock = {
     type: 'image',
     text: '',
+    spans: [],
     alt: imgNode.alt,
     title: imgNode.title,
     url: imgNode.url,
@@ -37,7 +48,20 @@ export function generate(node: IMarkdownNode, offset: number): GenerationResult<
       },
       url: imgNode.url,
     },
-  } as IImageBlock);
+  };
+
+  if (parent.type === 'link') {
+    const linkNode = parent as ILinkMarkdownNode;
+
+    image.data.linkTo = {
+      url: linkNode.url,
+      preview: {
+        title: linkNode.url,
+      },
+    };
+  }
+
+  hoist(image);
 
   return noop(node, offset);
 }
