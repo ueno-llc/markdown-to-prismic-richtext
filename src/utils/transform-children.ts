@@ -2,7 +2,6 @@ import { IMarkdownNode, IRichTextSpan } from '../types';
 import { runGenerator, spans, GenerationResult } from '../generators/generators';
 import { pushParent, popParent } from '../generators/hooks/parent';
 
-
 export function _transformChildren(children: IMarkdownNode[], offset: number): GenerationResult<IRichTextSpan> {
   return children.reduce<GenerationResult<IRichTextSpan>>(
     ([previousNodes, text, [, currentPosition]], child) => {
