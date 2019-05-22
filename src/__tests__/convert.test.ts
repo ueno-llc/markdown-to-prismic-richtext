@@ -1,8 +1,9 @@
 import convert from '../index';
 import * as PrismicRichText from 'prismic-richtext';
-import { IRichTextBlock, IRichTextSpan } from '../types';
+import { IRichTextBlock, IRichTextSpan, IMarkdownNode } from '../types';
 import { inspect } from 'util';
 import { parseMarkdown } from '../utils/parse-markdown';
+import { runGenerator, spans } from '../generators/generators';
 
 const markdown2 = `
 # Hello
@@ -69,18 +70,6 @@ describe('convert', () => {
     const em = result[0].spans[0];
 
     expectSpan(em, 'em', 2, 3, 'l');
-    expectPrismic(result);
-  });
-
-  it('should convert link references', () => {
-    const result = convert(`here is a [reference].
-    
-[reference]: http://definition.com`);
-
-    const block = result[0];
-    const definitionBlock = result[1];
-    expectBlock(block, 'paragraph', 'here is a reference.', 1);
-    expectBlock(definitionBlock, 'paragraph', 'reference: http://definition.com', 2);
     expectPrismic(result);
   });
 
@@ -179,6 +168,78 @@ this is \`an inline code\` example
     const result = convert(content);
 
     expect(result[0]!.text).toBe('this is  some text ');
+  });
+
+  it('should convert formatted links', () => {
+    const content = '[This is some **li*i*k** text](https://mbl.is)';
+
+    const [{ spans, text }] = convert(content);
+
+    expect(text).toBe('This is some liik text');
+    expect(spans.length).toBe(3);
+
+    expect(spans.find(x => x.type === 'strong')).toMatchObject({
+      type: 'strong',
+      start: 13,
+      text: 'liik',
+      end: 17,
+    });
+
+    expect(spans.find(x => x.type === 'em')).toMatchObject({
+      type: 'em',
+      start: 15,
+      text: 'i',
+      end: 16,
+    });
+
+    expect(spans.find(l => l.type === 'hyperlink')).toMatchObject({
+      type: 'hyperlink',
+      start: 0,
+      end: 22,
+      data: {
+        url: 'https://mbl.is',
+        preview: {
+          title: '',
+        },
+      },
+    });
+  });
+
+  it('should have correct offsets for links', () => {
+    const content = 'Text before [some link **text**](https://mbl.is)';
+
+    const [block] = convert(content);
+
+    expectBlock(block, 'paragraph', 'Text before some link text', 2);
+
+    expectSpan(block.spans.find(x => x.type === 'strong')!, 'strong', 22, 26, 'text');
+
+    expectSpan(block.spans.find(x => x.type === 'hyperlink')!, 'hyperlink',12, 26, undefined);
+  });
+
+  it('should support image links', () => {
+    const c = '[![Image title](https://placehold.it/128x128) should I add **more** text](https://mbl.is)';
+
+    const result = convert(c);
+
+  });
+});
+
+describe('runGenerator', () => {
+  it('should run a default generator when given unknown type', () => {
+    const node: IMarkdownNode = {
+      type: 'foo',
+      position: {
+        end: { column: 0, line: 0, offset: 3 },
+        start: { column: 0, line: 0, offset: 0 },
+      },
+      value: 'foo',
+    };
+
+    const mock = jest.fn();
+
+    runGenerator(node, spans, mock as any, 0);
+    expect(mock).toBeCalledWith(node, 0);
   });
 });
 

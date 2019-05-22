@@ -1,6 +1,6 @@
 import { IMarkdownNode, IRichTextSpan } from '../types';
-import { extractText } from '../utils/extract-text';
-import { first, last } from 'lodash';
+import { transformChildren } from '../utils/transform-children';
+import { GenerationResult } from './generators';
 
 interface IHyperlinkRichTextSpan extends IRichTextSpan {
   type: 'hyperlink';
@@ -17,13 +17,10 @@ export interface ILinkMarkdownNode extends IMarkdownNode {
   title: string | null;
 }
 
-export function generate(node: IMarkdownNode): IRichTextSpan[] {
+export function generate(node: IMarkdownNode, offset: number): GenerationResult<IRichTextSpan> {
   const linkNode = node as ILinkMarkdownNode;
 
-  const [, offsets] = extractText(linkNode);
-
-  const [start] = first(offsets)!;
-  const [, end] = last(offsets)!;
+  const [children, text, [start, end]] = transformChildren(linkNode.children || [], offset);
 
   const hyperlink: IHyperlinkRichTextSpan = {
     type: 'hyperlink',
@@ -37,5 +34,5 @@ export function generate(node: IMarkdownNode): IRichTextSpan[] {
     },
   };
 
-  return [hyperlink];
+  return [[hyperlink, ...children], text, [start, end]];
 }

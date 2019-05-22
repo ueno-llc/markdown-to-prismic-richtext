@@ -1,16 +1,16 @@
 import { IMarkdownNode, PrismicNode, IRichTextSpan, IRichTextBlock } from '../types';
 import { generate as heading } from './heading';
 import { generate as text } from './text';
-import { generate as paragraph } from './paragraph';
 import { generate as link } from './link';
 import { generate as image } from './image';
-import { generate as definition } from './definition';
 import { generate as list } from './list';
 import { generate as noop } from './noop';
 import { block } from './block';
 import { inline } from './inline';
 
-export type GeneratorFn<T extends PrismicNode> = (node: IMarkdownNode) => T[];
+export type GeneratorFn<T extends PrismicNode> = (node: IMarkdownNode, offset: number) => GenerationResult<T>;
+
+export type GenerationResult<T extends PrismicNode> = [T[], string, [number, number]];
 
 export interface IGeneratorCollection<T extends PrismicNode> {
   [key: string]: GeneratorFn<T>;
@@ -18,9 +18,8 @@ export interface IGeneratorCollection<T extends PrismicNode> {
 
 export const blocks: IGeneratorCollection<IRichTextBlock> = {
   heading,
-  paragraph,
-  definition,
-
+  paragraph: block("paragraph"),
+  definition: noop,
   code: block('preformatted'),
   list,
   html: noop,
@@ -32,7 +31,7 @@ export const spans: IGeneratorCollection<IRichTextSpan> = {
   image,
   html: noop,
   break: noop,
-  listItem: text,
+  listItem: inline("text"),
   inlineCode: inline('preformatted'),
   strong: inline('strong'),
   emphasis: inline('em'),
@@ -44,12 +43,13 @@ export function runGenerator<T extends PrismicNode>(
   node: IMarkdownNode,
   generators: { [key: string]: GeneratorFn<T> },
   defaultGenerator: GeneratorFn<T>,
-): T[] {
+  offset: number
+): GenerationResult<T> {
   if (!generators[node.type]) {
     /* tslint:disable-next-line */
     console.warn(`No direct translation of type "${node.type}" to prismic richtext found! Using a default generator.`);
-    return defaultGenerator(node) as T[];
+    return defaultGenerator(node, offset);
   }
 
-  return generators[node.type](node);
+  return generators[node.type](node, offset);
 }

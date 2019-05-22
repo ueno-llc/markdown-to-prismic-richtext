@@ -1,6 +1,5 @@
 import { IMarkdownNode, IRichTextBlock, IPosition } from '../types';
 import { repeat, flatten } from 'lodash';
-import { extractText } from './extract-text';
 import { transformChildren } from './transform-children';
 
 function intersperse<T>(arr: T[], elementFn: (left: T, right: T) => T) {
@@ -30,19 +29,13 @@ export function mergeParagraphs(paragraphs: IMarkdownNode[]): IRichTextBlock {
     };
   });
 
-  const [text, offsets] = extractText({
-    children: paragraphsWithLinebreaks,
-    type: 'root',
-  });
-
   const allChildren = flatten(paragraphsWithLinebreaks.map(x => x.children || []));
 
-  const transformed = transformChildren(allChildren, offsets);
+  const [spans, text, ] = transformChildren(allChildren, 0);
 
   return {
     type: 'paragraph',
-
-    spans: transformed,
+    spans,
     text,
   };
 }

@@ -1,19 +1,17 @@
 import { IMarkdownHeadingNode, IRichTextBlock, IMarkdownNode } from '../types';
-import { extractText } from '../utils/extract-text';
 import { transformChildren } from '../utils/transform-children';
+import { GenerationResult } from './generators';
 
-export function generate(node: IMarkdownNode): IRichTextBlock[] {
+export function generate(node: IMarkdownNode, offset: number): GenerationResult<IRichTextBlock> {
   const headingNode = node as IMarkdownHeadingNode;
 
-  const [text, offsets] = extractText(node);
+  const [spans, text, offsets] = transformChildren(node.children || [], offset);
 
-  const children = transformChildren(node.children || [], offsets);
-
-  return [
-    {
+  return [[
+    { 
       type: `heading${headingNode.depth}`,
       text,
-      spans: children,
+      spans
     },
-  ];
+  ], text, offsets];
 }

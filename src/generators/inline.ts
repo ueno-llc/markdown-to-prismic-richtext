@@ -1,19 +1,23 @@
-import { first, last } from 'lodash';
-import { extractText } from '../utils/extract-text';
 import { IMarkdownNode, IRichTextSpan } from '../types';
+import { transformChildren } from '../utils/transform-children';
+import { GenerationResult } from './generators';
 
-export const inline = (type: string) => (node: IMarkdownNode): IRichTextSpan[] => {
-  const [text, offsets] = extractText(node);
+export const inline = (type: string) => (node: IMarkdownNode, offset: number): GenerationResult<IRichTextSpan> => {
+  
 
-  const [start, _] = first(offsets)!;
-  const [__, end] = last(offsets)!;
+  const [spans, text, [start, end]] = transformChildren(node.children || [], offset);
 
   return [
-    {
-      end,
-      start,
-      text,
-      type,
-    },
+    [
+      {
+        end,
+        start,
+        text,
+        type,
+      },
+      ...spans,
+    ],
+    text,
+    [start, end],
   ];
 };

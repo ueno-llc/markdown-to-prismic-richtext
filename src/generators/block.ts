@@ -1,17 +1,19 @@
 import { IMarkdownNode, IRichTextBlock } from 'types';
-import { extractText } from '../utils/extract-text';
 import { transformChildren } from '../utils/transform-children';
+import { GenerationResult } from './generators';
 
-export const block = (type: string) => (node: IMarkdownNode): IRichTextBlock[] => {
-  const [text, offsets] = extractText(node);
-
-  const spans = transformChildren(node.children || [], offsets);
+export const block = (type: string) => (node: IMarkdownNode, offset: number): GenerationResult<IRichTextBlock> => {
+  const [spans, text, offsets] = transformChildren(node.children || [], offset);
 
   return [
-    {
-      type,
-      text,
-      spans,
-    },
+    [
+      {
+        type,
+        text,
+        spans,
+      },
+    ],
+    text,
+    offsets,
   ];
 };

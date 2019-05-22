@@ -1,5 +1,7 @@
 import { IMarkdownNode, IRichTextBlock, IRichTextSpan } from 'types';
 import { hoist } from './hooks/hoist';
+import { GenerationResult } from './generators';
+import { generate as noop } from "./noop"
 
 export interface IImageBlock extends IRichTextBlock {
   type: 'image';
@@ -20,9 +22,9 @@ export interface IImageNode extends IMarkdownNode {
   url: string;
 }
 
-export function generate(node: IMarkdownNode): IRichTextSpan[] {
+export function generate(node: IMarkdownNode, offset: number): GenerationResult<IRichTextSpan> {
   const imgNode = node as IImageNode;
-
+  
   hoist({
     type: 'image',
     text: '',
@@ -37,5 +39,5 @@ export function generate(node: IMarkdownNode): IRichTextSpan[] {
     },
   } as IImageBlock);
 
-  return [];
+  return noop(node, offset);
 }

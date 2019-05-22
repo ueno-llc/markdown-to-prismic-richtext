@@ -1,5 +1,6 @@
 import { IMarkdownNode, PrismicNode } from 'types';
+import { GenerationResult } from './generators';
 
-export function generate<T extends PrismicNode>(node: IMarkdownNode): T[] {
-  return [];
+export function generate<T extends PrismicNode>(node: IMarkdownNode, offset: number): GenerationResult<T> {
+  return [[], node.value || '', [offset, offset]];
 }
