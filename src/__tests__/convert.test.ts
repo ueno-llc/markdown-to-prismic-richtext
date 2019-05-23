@@ -42,7 +42,7 @@ function expectSpan(span: IRichTextSpan, type: string, start: number, end: numbe
 }
 
 function expectPrismic(blocks: IRichTextBlock[]) {
-  const mapped = blocks.map(({type, content: { spans, text }}) => ({type, spans, text }));
+  const mapped = blocks.map(({ type, content: { spans, text } }) => ({ type, spans, text }));
   PrismicRichText.asHtml(mapped);
 }
 
