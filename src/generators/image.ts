@@ -37,8 +37,10 @@ export function generate(node: IMarkdownNode, offset: number): GenerationResult<
 
   const image: IImageBlock = {
     type: 'image',
-    text: '',
-    spans: [],
+    content: {
+      text: '',
+      spans: [],
+    },
     alt: imgNode.alt,
     title: imgNode.title,
     url: imgNode.url,

@@ -10,13 +10,15 @@ export interface IRichTextSpan {
   start: number;
   end: number;
   type: string;
-  text?: string;
+  //  text?: string;
 }
 
 export interface IRichTextBlock {
   type: string;
-  spans: IRichTextSpan[];
-  text: string;
+  content: {
+    spans: IRichTextSpan[];
+    text: string;
+  };
 }
 
 export interface IPosition {

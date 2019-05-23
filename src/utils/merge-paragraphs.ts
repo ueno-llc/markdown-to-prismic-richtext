@@ -35,8 +35,10 @@ export function mergeParagraphs(paragraphs: IMarkdownNode[]): IRichTextBlock {
 
   return {
     type: 'paragraph',
-    spans,
-    text,
+    content: {
+      spans,
+      text,
+    },
   };
 }
 

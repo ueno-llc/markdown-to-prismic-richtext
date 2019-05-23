@@ -10,7 +10,6 @@ export const inline = (type: string) => (node: IMarkdownNode, offset: number): G
       {
         end,
         start,
-        text,
         type,
       },
       ...spans,

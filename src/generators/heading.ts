@@ -11,8 +11,10 @@ export function generate(node: IMarkdownNode, offset: number): GenerationResult<
     [
       {
         type: `heading${headingNode.depth}`,
-        text,
-        spans,
+        content: {
+          text,
+          spans,
+        },
       },
     ],
     text,

@@ -9,8 +9,10 @@ export const block = (type: string) => (node: IMarkdownNode, offset: number): Ge
     [
       {
         type,
-        text,
-        spans,
+        content: {
+          text,
+          spans,
+        },
       },
     ],
     text,

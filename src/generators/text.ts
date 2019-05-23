@@ -8,7 +8,6 @@ export function generate(node: IMarkdownNode, offset: number): GenerationResult<
       {
         end: offset + text.length,
         start: offset,
-        text,
         type: 'text',
       },
     ],

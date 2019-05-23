@@ -1,5 +1,5 @@
 import convert from '../index';
-import * as PrismicRichText from 'prismic-richtext';
+import { RichText as PrismicRichText } from 'prismic-dom';
 import { IRichTextBlock, IRichTextSpan, IMarkdownNode } from '../types';
 import { inspect } from 'util';
 import { parseMarkdown } from '../utils/parse-markdown';
@@ -30,46 +30,38 @@ sit amet
 function expectBlock(blockNode: IRichTextBlock | undefined, type: string, content: string, spansCount: number = 0) {
   expect(blockNode).not.toBeNull();
   expect(blockNode!.type).toBe(type);
-  expect(blockNode!.text).toBe(content);
-  expect(blockNode!.spans.length).toBe(spansCount);
+  expect(blockNode!.content.text).toBe(content);
+  expect(blockNode!.content.spans.length).toBe(spansCount);
 }
 
-function expectSpan(span: IRichTextSpan, type: string, start: number, end: number, text?: string) {
+function expectSpan(span: IRichTextSpan, type: string, start: number, end: number) {
   expect(span).not.toBeNull();
   expect(span.type).toBe(type);
   expect(span.end).toEqual(end);
   expect(span.start).toEqual(start);
-
-  if (text) {
-    expect(span.text).toBe(text);
-  }
 }
 
 function expectPrismic(blocks: IRichTextBlock[]) {
-  PrismicRichText.asTree(blocks);
+  const mapped = blocks.map(({type, content: { spans, text }}) => ({type, spans, text }));
+  PrismicRichText.asHtml(mapped);
 }
 
 describe('convert', () => {
-  it.skip('should convert', () => {
-    const result = convert(markdown2);
-    expectPrismic(result);
-  });
-
   it('should convert strong', () => {
     const result = convert('he**l**lo');
 
-    const strong = result[0].spans[0];
+    const strong = result[0].content.spans[0];
 
-    expectSpan(strong, 'strong', 2, 3, 'l');
+    expectSpan(strong, 'strong', 2, 3);
     expectPrismic(result);
   });
 
   it('should convert em', () => {
     const result = convert('he*l*lo');
 
-    const em = result[0].spans[0];
+    const em = result[0].content.spans[0];
 
-    expectSpan(em, 'em', 2, 3, 'l');
+    expectSpan(em, 'em', 2, 3);
     expectPrismic(result);
   });
 
@@ -79,7 +71,7 @@ describe('convert', () => {
     const pgblock = result[0];
 
     expectBlock(pgblock, 'paragraph', 'this is hello a link', 1);
-    expectSpan(pgblock.spans[0], 'hyperlink', 8, 13);
+    expectSpan(pgblock.content.spans[0], 'hyperlink', 8, 13);
     expectPrismic(result);
   });
 
@@ -89,7 +81,7 @@ describe('convert', () => {
     const pgblock = result[0];
 
     expectBlock(pgblock, 'paragraph', 'http://mbl.is', 1);
-    expectSpan(pgblock.spans[0], 'hyperlink', 0, 13);
+    expectSpan(pgblock.content.spans[0], 'hyperlink', 0, 13);
     expectPrismic(result);
   });
 
@@ -167,13 +159,17 @@ this is \`an inline code\` example
 
     const result = convert(content);
 
-    expect(result[0]!.text).toBe('this is  some text ');
+    expect(result[0]!.content.text).toBe('this is  some text ');
   });
 
   it('should convert formatted links', () => {
     const content = '[This is some **li*i*k** text](https://mbl.is)';
 
-    const [{ spans, text }] = convert(content);
+    const [
+      {
+        content: { spans, text },
+      },
+    ] = convert(content);
 
     expect(text).toBe('This is some liik text');
     expect(spans.length).toBe(3);
@@ -181,14 +177,12 @@ this is \`an inline code\` example
     expect(spans.find(x => x.type === 'strong')).toMatchObject({
       type: 'strong',
       start: 13,
-      text: 'liik',
       end: 17,
     });
 
     expect(spans.find(x => x.type === 'em')).toMatchObject({
       type: 'em',
       start: 15,
-      text: 'i',
       end: 16,
     });
 
@@ -212,9 +206,9 @@ this is \`an inline code\` example
 
     expectBlock(block, 'paragraph', 'Text before some link text', 2);
 
-    expectSpan(block.spans.find(x => x.type === 'strong')!, 'strong', 22, 26, 'text');
+    expectSpan(block.content.spans.find(x => x.type === 'strong')!, 'strong', 22, 26);
 
-    expectSpan(block.spans.find(x => x.type === 'hyperlink')!, 'hyperlink', 12, 26, undefined);
+    expectSpan(block.content.spans.find(x => x.type === 'hyperlink')!, 'hyperlink', 12, 26);
   });
 
   it('should support image links', () => {
@@ -246,6 +240,6 @@ describe('prismic compatibility', () => {
   it('should convert into something prismic can use', () => {
     const bla = convert(markdown2);
 
-    PrismicRichText.asTree(bla);
+    expectPrismic(bla);
   });
 });
